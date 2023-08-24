@@ -20,6 +20,7 @@ export class MeComponent implements OnInit {
               private userService: UserService) {
   }
 
+  
   public ngOnInit(): void {
     this.userService
       .getById(this.sessionService.sessionInformation!.id.toString())

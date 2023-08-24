@@ -14,8 +14,10 @@ import { expect } from '@jest/globals';
 import { Router } from '@angular/router';
 import { NgZone } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import userEvent from '@testing-library/user-event';
 
 import { RegisterComponent } from './register.component';
+import { LoginComponent } from '../login/login.component';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -29,7 +31,8 @@ describe('RegisterComponent', () => {
       declarations: [RegisterComponent],
       imports: [
         RouterTestingModule.withRoutes([
-          { path: 'sessions', component: RegisterComponent}
+          { path: 'sessions', component: RegisterComponent},
+          { path: 'login', component: LoginComponent}
         ]),
         BrowserAnimationsModule,
         HttpClientModule,
@@ -71,6 +74,67 @@ describe('RegisterComponent', () => {
   it('should call register error', () => {
     component.submit()
     httpTestingController.expectOne('api/auth/register')
-    .error(new ErrorEvent('network error'));
+    .error(new ErrorEvent(''));
   });
+
+  describe('RegisterComponent integrartion suite', () => { 
+    let firstName: HTMLInputElement;
+    let lastName: HTMLInputElement;
+    let emailInput: HTMLInputElement;
+    let passwordInput: HTMLInputElement;
+    let buttonSubmit: HTMLButtonElement;
+
+    beforeEach(async () => {
+      firstName = fixture.nativeElement.querySelector('[data-placeholder="First name"]');
+      lastName = fixture.nativeElement.querySelector('[data-placeholder="Last name"]');
+      emailInput = fixture.nativeElement.querySelector('[data-placeholder="Email"]');
+      passwordInput = fixture.nativeElement.querySelector('[data-placeholder="Password"]');
+      buttonSubmit = fixture.nativeElement.querySelector('[type="submit"]');
+    })
+
+    it('should button submit be disable when only password and email provided', async() => {
+      await userEvent.type(emailInput, 'thoas@yahoo.fr');
+      await userEvent.type(passwordInput, '*******');
+      fixture.detectChanges();
+      expect(buttonSubmit.disabled).toBeTruthy(); 
+    })
+
+    it('should button submit be disable when only password and email provided', async() => {
+      await userEvent.type(emailInput, 'thoas@yahoo.fr');
+      await userEvent.type(passwordInput, '*******');
+      fixture.detectChanges();
+      expect(buttonSubmit.disabled).toBeTruthy(); 
+    })
+
+    it('should button submit be disable when only password and email and firstName provided', async() => {
+      await userEvent.type(firstName, 'thomas');
+      await userEvent.type(emailInput, 'thoas@yahoo.fr');
+      await userEvent.type(passwordInput, '*******');
+      fixture.detectChanges();
+      expect(buttonSubmit.disabled).toBeTruthy(); 
+    })
+
+    it('should button submit be disable when only password and email and lastName provided', async() => {
+      await userEvent.type(lastName, 'bst');
+      await userEvent.type(emailInput, 'thoas@yahoo.fr');
+      await userEvent.type(passwordInput, '*******');
+      fixture.detectChanges();
+      expect(buttonSubmit.disabled).toBeTruthy(); 
+    })
+
+    it('should button submit be enabled when valid form information', async() => {
+      expect(buttonSubmit.disabled).toBeTruthy();
+      await userEvent.type(firstName, 'thomas');
+      await userEvent.type(lastName, 'bst');
+      await userEvent.type(emailInput, 'thoas@yahoo.fr');
+      await userEvent.type(passwordInput, '******');
+      fixture.detectChanges()
+      
+      expect(buttonSubmit.disabled).toBeFalsy();
+      const mockSubmit = jest.spyOn(component as any, 'submit');
+      await userEvent.click(buttonSubmit);
+      expect(mockSubmit).toHaveBeenCalledTimes(1);
+    });
+
+  })
 });
