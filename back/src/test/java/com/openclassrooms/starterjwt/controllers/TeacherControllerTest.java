@@ -1,6 +1,7 @@
 package com.openclassrooms.starterjwt.controllers;
 
 import com.openclassrooms.starterjwt.models.Teacher;
+import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.services.TeacherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,21 +33,19 @@ public class TeacherControllerTest {
     TeacherService teacherService;
 
     private Teacher mockTeacher;
+
+    private Teacher mockTeacher1;
+
     @BeforeEach
     public void setUp() {
         LocalDateTime date = LocalDateTime.of(2023, 8, 31, 13, 17);
-        mockTeacher = new Teacher(
-            1L,
-            "last_name",
-            "first_name",
-            date,
-            date
-        );
+        mockTeacher = createTeacher(1L, "last_name", "first_name", date, date);
+        mockTeacher1 = createTeacher(2L, "last_name2", "first_name2", date, date);
     }
     @Test
     public void shouldReturnTeacherList() throws Exception {
         //GIVEN
-        List<Teacher> listTeachers = Arrays.asList(this.mockTeacher);
+        List<Teacher> listTeachers = Arrays.asList(this.mockTeacher, this.mockTeacher1);
         //WHEN
         Mockito.when(teacherService.findAll()).thenReturn(listTeachers);
         //THEN
@@ -76,5 +75,29 @@ public class TeacherControllerTest {
             .andExpect(jsonPath("$.lastName").value(this.mockTeacher.getLastName()))
             .andExpect(jsonPath("$.firstName").value(this.mockTeacher.getFirstName())
         );
+
+        //THEN
+        this.mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/teacher/{id}", 5L)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNotFound());
+
+        //THEN
+        this.mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/teacher/{id}", "sdsd")
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isBadRequest());
+    }
+
+    private Teacher createTeacher(Long id, String lastName, String firstName, LocalDateTime createdAt,  LocalDateTime updatedAt) {
+        Teacher teacher = new Teacher();
+        teacher.setId(id);
+        teacher.setLastName(lastName);
+        teacher.setFirstName(firstName);
+        teacher.setCreatedAt(createdAt);
+        teacher.setUpdatedAt(updatedAt);
+        return teacher;
     }
 }

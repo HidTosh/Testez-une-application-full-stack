@@ -73,6 +73,13 @@ public class UserControllerTest {
             )
             .andExpect(status().isNotFound()
         );
+
+        //return 404 when user not fount
+        this.mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/user/{id}", "fsd")
+                )
+                .andExpect(status().isBadRequest()
+                );
     }
 
     @Test

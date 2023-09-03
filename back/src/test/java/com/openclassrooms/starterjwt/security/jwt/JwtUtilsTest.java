@@ -1,6 +1,7 @@
 package com.openclassrooms.starterjwt.security.jwt;
 
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -9,6 +10,8 @@ import org.springframework.security.authentication.TestingAuthenticationProvider
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.Date;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -24,7 +27,7 @@ public class JwtUtilsTest {
     @BeforeEach
     public void setup() {
         jwtUtils = new JwtUtils();
-        ReflectionTestUtils.setField(jwtUtils, "jwtSecret", "sxsqxsqxqsx");
+        ReflectionTestUtils.setField(jwtUtils, "jwtSecret", "openclassrooms");
         ReflectionTestUtils.setField(jwtUtils, "jwtExpirationMs", 3600);
 
         userDetails = userDetails();
@@ -54,8 +57,18 @@ public class JwtUtilsTest {
 
         assertThat(jwtUtils.validateJwtToken(token)).isEqualTo(true);
 
-        // when not valid token
-        assertThat(jwtUtils.validateJwtToken(token + "545")).isEqualTo(false);
+        assertThat(jwtUtils.validateJwtToken(token + "545")).isEqualTo(false); //SignatureException
+
+        assertThat(jwtUtils.validateJwtToken("string")).isEqualTo(false); // MalformedJwtException
+
+        ReflectionTestUtils.setField(jwtUtils, "jwtExpirationMs", 0);
+        String myToken = jwtUtils.generateJwtToken(authentication);
+        assertThat(jwtUtils.validateJwtToken(myToken)).isEqualTo(false); //ExpiredJwtException
+
+        String mockJwt = Jwts.builder().setIssuedAt(new Date()).compact();
+        assertThat(jwtUtils.validateJwtToken(mockJwt)).isEqualTo(false);// UnsupportedJwtException
+
+        assertThat(jwtUtils.validateJwtToken("")).isEqualTo(false); //IllegalArgumentException
     }
 
     private UserDetailsImpl userDetails() {

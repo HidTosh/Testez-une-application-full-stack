@@ -1,7 +1,5 @@
 package com.openclassrooms.starterjwt.security.jwt;
 
-import com.openclassrooms.starterjwt.models.Session;
-import com.openclassrooms.starterjwt.services.SessionService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,8 +20,7 @@ public class AuthEntryPointJwtTest {
     @InjectMocks
     AuthEntryPointJwt authEntryPointJwt;
     @Test
-    public void commence() throws Exception{
-
+    public void commence() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter("firstName", "Spring");
         request.setParameter("lastName", "Test");
@@ -31,6 +28,5 @@ public class AuthEntryPointJwtTest {
         AuthenticationException e = mock(AuthenticationException.class);
 
         authEntryPointJwt.commence(request, response, e);
-
     }
 }

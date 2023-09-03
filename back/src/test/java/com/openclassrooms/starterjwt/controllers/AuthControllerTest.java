@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.payload.request.LoginRequest;
 import com.openclassrooms.starterjwt.payload.request.SignupRequest;
 import com.openclassrooms.starterjwt.repository.UserRepository;
@@ -26,6 +27,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser
@@ -42,6 +46,8 @@ public class AuthControllerTest {
 
     @MockBean
     UserRepository userRepository;
+
+    private User mockUser;
 
     private static ObjectMapper mapper = new ObjectMapper();
 
@@ -61,6 +67,11 @@ public class AuthControllerTest {
         when(authenticationManager.authenticate(any())).thenReturn(authentication);
         authentication.setAuthenticated(true);
         when(jwtUtils.generateJwtToken(authentication)).thenReturn(mockJwtToken);
+
+
+        mockUser = createUser(1L, "yogauser", "last name", "first name", "test!1234", true);
+
+        Mockito.when(userRepository.findByEmail(userDetails.getUsername())).thenReturn(Optional.of(mockUser));
 
         this.mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/auth/login")
@@ -126,5 +137,25 @@ public class AuthControllerTest {
         signupRequest.setEmail("toto3@toto.com");
         signupRequest.setPassword("test!1234");
         return signupRequest;
+    }
+
+    private com.openclassrooms.starterjwt.models.User createUser(
+            Long id,
+            String email,
+            String lastName,
+            String firstName,
+            String password,
+            Boolean isAdmin
+    ) {
+        com.openclassrooms.starterjwt.models.User user = new User();
+        user.setId(id);
+        user.setEmail(email);
+        user.setLastName(lastName);
+        user.setFirstName(firstName);
+        user.setPassword(password);
+        user.setAdmin(isAdmin);
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        return user;
     }
 }
