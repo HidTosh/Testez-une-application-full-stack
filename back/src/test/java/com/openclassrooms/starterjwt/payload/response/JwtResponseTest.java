@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 public class JwtResponseTest {
-
     private JwtResponse jwtResponse;
 
     @BeforeEach

@@ -22,17 +22,12 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class SessionServiceTest {
-    @Mock
-    SessionRepository sessionRepository;
-
-    @Mock
-    UserRepository userRepository;
-
-    @Mock
-    Teacher teacher;
-
     @InjectMocks
     SessionService sessionService;
+    @Mock
+    SessionRepository sessionRepository;
+    @Mock
+    UserRepository userRepository;
 
     private Session mockSession;
 
@@ -40,62 +35,55 @@ public class SessionServiceTest {
 
     @BeforeEach
     public void setUp() {
-        mockUser = getMockUser(1L);
-        User mockUser2 = getMockUser(2L);
-        User mockUser3 = getMockUser(3L);
         LocalDateTime date = LocalDateTime.now();
-        ArrayList<User> arrlistUser = new ArrayList<User>(5);
-        arrlistUser.add(mockUser2);
-        arrlistUser.add(mockUser2);
+        mockUser = getMockUser(1L);
+        Teacher mockTeacher = new Teacher(2L, "last_name", "first_name", date, date);
+        ArrayList<User> arrayListUser = new ArrayList<User>(1);
+        arrayListUser.add(getMockUser(2L));
         mockSession = new Session(
-            3L,
-            "session 1",
-            new Date(),
-            "my description",
-            teacher,
-            arrlistUser,
-            date,
-            date
+            3L, "session 1", new Date(), "my description", mockTeacher, arrayListUser, date, date
         );
     }
     @Test
-    public void findAllUsers() {
+    public void shouldReturnAllSession() {
         List<Session> listSession = Arrays.asList(mockSession, mockSession);
 
         when(sessionRepository.findAll()).thenReturn(listSession);
 
-        assertThat(sessionService.findAll().size()).isEqualTo(2);
+        assertThat(sessionService.findAll().size()).isEqualTo(listSession.size());
         assertThat(sessionService.findAll().get(0).getName()).isEqualTo(mockSession.getName());
     }
 
     @Test
-    public void getById() {
-        Long idSessionExist = mockSession.getId();
-        when(sessionRepository.findById(idSessionExist)).thenReturn(Optional.of(mockSession));
+    public void shouldReturnSession() {
+        Long idSession = mockSession.getId();
 
-        assertThat(sessionService.getById(idSessionExist).getName()).isEqualTo(mockSession.getName());
-        assertThat(sessionService.getById(idSessionExist).getDescription()).isEqualTo(mockSession.getDescription());
+        // Id Session Hwo Does Not Exist
+        assertThat(sessionService.getById(idSession)).isEqualTo(null);
 
-        // Id Session How Does Not Exist
-        assertThat(sessionService.getById(5L)).isEqualTo(null);
+        when(sessionRepository.findById(idSession)).thenReturn(Optional.of(mockSession));
+
+        assertThat(sessionService.getById(idSession).getName()).isEqualTo(mockSession.getName());
+        assertThat(sessionService.getById(idSession).getDescription()).isEqualTo(mockSession.getDescription());
     }
 
     @Test
-    public void create() {
+    public void shouldReturnSessionAfterCreate() {
         when(sessionRepository.save(mockSession)).thenReturn(mockSession);
 
         assertThat(sessionService.create(mockSession)).isEqualTo(mockSession);
     }
 
     @Test
-    public void delete() {
+    public void shouldNotReturnSessionAfterDelete() {
         sessionService.delete(mockSession.getId());
 
+        assertThat(sessionService.getById(mockSession.getId())).isNull();
         verify(sessionRepository).deleteById(mockSession.getId()); // check that the method was called
     }
 
     @Test
-    public void update() {
+    public void shouldReturnDataUpdated() {
         Long idUpdate = 6L;
         mockSession.setId(idUpdate);
         when(sessionRepository.save(mockSession)).thenReturn(mockSession);
@@ -106,31 +94,37 @@ public class SessionServiceTest {
     }
 
     @Test
-    public void participate() {
+    public void shouldAddUserToSession() {
         when(sessionRepository.findById(mockSession.getId())).thenReturn(Optional.of(mockSession));
-        // when user is null NotFoundException
-        assertThrows(NotFoundException.class, () -> sessionService.participate(mockSession.getId(), mockUser.getId()));
-
-        // when participate new user
+        //WHEN user is null NotFoundException
+        assertThrows(NotFoundException.class, () ->
+            sessionService.participate(mockSession.getId(), mockUser.getId())
+        );
+        //WHEN participate new user
+        assertThat(mockSession.getUsers().size()).isEqualTo(1);
         when(userRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUser));
         sessionService.participate(mockSession.getId(), mockUser.getId());
         verify(sessionRepository).save(mockSession);
-
-        // when user already participate throw BadRequestException
+        assertThat(mockSession.getUsers().size()).isEqualTo(2);
+        //WHEN user already participate throw BadRequestException
         mockSession.getUsers().add(mockUser);
-        assertThrows(BadRequestException.class, () -> sessionService.participate(mockSession.getId(), mockUser.getId()));
+        assertThrows(BadRequestException.class, () ->
+            sessionService.participate(mockSession.getId(), mockUser.getId())
+        );
     }
 
     @Test
     public void noLongerParticipate() {
-        when(sessionRepository.findById(mockSession.getId())).thenReturn(Optional.of(mockSession));
         //When session does not exists
-        assertThrows(NotFoundException.class, () -> sessionService.noLongerParticipate(5L, mockUser.getId()));
-
-        // when user is not in participate list
-        assertThrows(BadRequestException.class, () -> sessionService.noLongerParticipate(mockSession.getId(), mockUser.getId()));
-
-        // when user already participate
+        assertThrows(NotFoundException.class, () ->
+            sessionService.noLongerParticipate(mockSession.getId(), mockUser.getId())
+        );
+        //When user is not in participate list
+        when(sessionRepository.findById(mockSession.getId())).thenReturn(Optional.of(mockSession));
+        assertThrows(BadRequestException.class, () ->
+            sessionService.noLongerParticipate(mockSession.getId(), mockUser.getId())
+        );
+        // When user already participate
         mockSession.getUsers().add(mockUser);
         sessionService.noLongerParticipate(mockSession.getId(), mockUser.getId());
         verify(sessionRepository).save(mockSession);

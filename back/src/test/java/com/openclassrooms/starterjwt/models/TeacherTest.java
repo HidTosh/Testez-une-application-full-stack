@@ -11,9 +11,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 public class TeacherTest { ;
     private Teacher mockTeacher;
-
     private Teacher mockTeacher1;
-
     private Teacher mockTeacher2;
 
     @BeforeEach

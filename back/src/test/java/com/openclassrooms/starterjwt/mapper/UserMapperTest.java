@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -30,9 +29,13 @@ public class UserMapperTest {
 
     @BeforeEach
     public void setUp() {
-        LocalDateTime date = LocalDateTime.of(2023, 8, 31, 13, 17);
-        mockUserDto = createUserDto(1L, "test@test.io", "last", "first", "**", false, date, date);
-        mockUser = createUser(1L, "test@test.io", "last", "first", "**", false, date, date);
+        LocalDateTime date = LocalDateTime.now();
+        mockUserDto = createUserDto(
+            1L, "test@test.io", "last", "first", "**", false, date, date
+        );
+        mockUser = createUser(
+            1L, "test@test.io", "last", "first", "**", false, date, date
+        );
         mockUserDtoNull = null;
         mockUserNull = null;
     }
@@ -56,8 +59,8 @@ public class UserMapperTest {
 
     @Test
     public void toDtoList() {
-        List<UserDto> listUserDto = Arrays.asList(mockUserDto);
-        List<User> listUser = Arrays.asList(mockUser);
+        List<UserDto> listUserDto = Arrays.asList(mockUserDto, mockUserDto);
+        List<User> listUser = Arrays.asList(mockUser, mockUser);
         List<User> listUserDtoNull = null;
 
         assertThat(userMapperImpl.toDto(listUserDtoNull)).isNull();
@@ -74,8 +77,8 @@ public class UserMapperTest {
 
     @Test
     public void toEntityList() {
-        List<UserDto> listUserDto = Arrays.asList(mockUserDto);
-        List<User> listUser = Arrays.asList(mockUser);
+        List<UserDto> listUserDto = Arrays.asList(mockUserDto, mockUserDto);
+        List<User> listUser = Arrays.asList(mockUser, mockUser);
         List<UserDto> listUserDtoNull = null;
 
         assertThat(userMapperImpl.toEntity(listUserDtoNull)).isNull();

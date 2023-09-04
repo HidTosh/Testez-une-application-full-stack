@@ -1,6 +1,5 @@
 package com.openclassrooms.starterjwt.models;
 
-import com.openclassrooms.starterjwt.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,10 +16,12 @@ public class UserTest {
     @BeforeEach
     public void setUp() {
         LocalDateTime date = LocalDateTime.of(2023, 8, 31, 13, 17);
-        mockUser = createUser(1L, "test@test.io", "last", "first", "**", false, date, date);
-        mockUser1 = createUser(1L, "test@test.io", "last", "first", "**", false, date, date);
-
-
+        mockUser = createUser(
+            1L, "test@test.io", "last", "first", "**", false, date, date
+        );
+        mockUser1 = createUser(
+            1L, "test@test.io", "last", "first", "**", false, date, date
+        );
     }
     @Test
     public void testEquals() {
@@ -39,28 +40,19 @@ public class UserTest {
         assertThat(mockEmptyUser.equals(null)).isFalse();
         // equality of user instance null
         assertThat(mockEmptyUser.equals(mockUser)).isFalse();
-
-        User myUser = new User("dsc", "dsfsf", "scdc", "cdscsc", true);
-        System.out.println(myUser);
-        myUser.setEmail("cdscsdcs");
-        mockEmptyUser.setEmail("cdscsdcs");
-
-        myUser.hashCode();
-
-
-
-        User.UserBuilder user = new User.UserBuilder();
-        user.toString();;
     }
-
 
     @Test
     public void testToString() {
+        User.UserBuilder user = new User.UserBuilder();
+        assertThat(user.toString()).isEqualTo(user.toString());
         assertThat(mockUser.toString()).isEqualTo(mockUser.toString());
     }
 
     @Test
     public void testHashCodes() {
+        User mockEmptyUser = new User();
+        assertThat(mockEmptyUser.hashCode()).isEqualTo(mockEmptyUser.hashCode());
         assertThat(mockUser.hashCode()).isEqualTo(mockUser.hashCode());
     }
 

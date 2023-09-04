@@ -15,10 +15,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class TeacherServiceTest {
-
     @InjectMocks
     TeacherService teacherService;
-
     @Mock
     TeacherRepository teacherRepository;
 
@@ -44,13 +42,13 @@ public class TeacherServiceTest {
     }
 
     @Test public void findById() {
-        Long idSessionExist = mockTeacher.getId();
-        when(teacherRepository.findById(idSessionExist)).thenReturn(Optional.of(mockTeacher));
-
-        assertThat(teacherService.findById(idSessionExist).getFirstName()).isEqualTo(mockTeacher.getFirstName());
-        assertThat(teacherService.findById(idSessionExist).getLastName()).isEqualTo(mockTeacher.getLastName());
-
+        Long idSession = mockTeacher.getId();
         // Id Session How Does Not Exist
-        assertThat(teacherService.findById(5L)).isEqualTo(null);
+        assertThat(teacherService.findById(idSession)).isEqualTo(null);
+
+        when(teacherRepository.findById(idSession)).thenReturn(Optional.of(mockTeacher));
+
+        assertThat(teacherService.findById(idSession).getFirstName()).isEqualTo(mockTeacher.getFirstName());
+        assertThat(teacherService.findById(idSession).getLastName()).isEqualTo(mockTeacher.getLastName());
     }
 }
