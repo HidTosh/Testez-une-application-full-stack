@@ -1,9 +1,7 @@
 package com.openclassrooms.starterjwt.mapper;
 
 import com.openclassrooms.starterjwt.dto.TeacherDto;
-import com.openclassrooms.starterjwt.dto.UserDto;
 import com.openclassrooms.starterjwt.models.Teacher;
-import com.openclassrooms.starterjwt.models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,7 +15,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 public class TeacherMapperTest {
-
     @InjectMocks
     TeacherMapperImpl teacherMapperImpl;
 
@@ -31,7 +28,7 @@ public class TeacherMapperTest {
 
     @BeforeEach
     public void setUp() {
-        LocalDateTime date = LocalDateTime.of(2023, 8, 31, 13, 17);
+        LocalDateTime date = LocalDateTime.now();
         mockTeacherDto = createTeacherDto(1L, "last", "first", date, date);
         mockTeacher = createTeacher(1L, "last", "first", date, date);
         mockTeacherDtoNull = null;
@@ -54,8 +51,8 @@ public class TeacherMapperTest {
 
     @Test
     public void toDtoList() {
-        List<TeacherDto> listTeacherDto = Arrays.asList(mockTeacherDto);
-        List<Teacher> listTeacher = Arrays.asList(mockTeacher);
+        List<TeacherDto> listTeacherDto = Arrays.asList(mockTeacherDto, mockTeacherDto);
+        List<Teacher> listTeacher = Arrays.asList(mockTeacher, mockTeacher);
         List<Teacher> listTeacherNull = null;
 
         assertThat(teacherMapperImpl.toDto(listTeacherNull)).isNull();
@@ -72,10 +69,9 @@ public class TeacherMapperTest {
 
     @Test
     public void toEntityList() {
-        List<TeacherDto> listTeacherDto = Arrays.asList(mockTeacherDto);
-        List<Teacher> listTeacher = Arrays.asList(mockTeacher);
+        List<TeacherDto> listTeacherDto = Arrays.asList(mockTeacherDto,mockTeacherDto);
+        List<Teacher> listTeacher = Arrays.asList(mockTeacher, mockTeacher);
         List<TeacherDto> listTeacherDtoNull = null;
-
 
         assertThat(teacherMapperImpl.toEntity(listTeacherDtoNull)).isNull();
 

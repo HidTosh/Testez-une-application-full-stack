@@ -1,4 +1,5 @@
 package com.openclassrooms.starterjwt.models;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -12,13 +13,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 public class SessionTest {
-
     @Mock
     User user;
-
     @Mock
     Teacher teacher;
-
     private Session mockSession;
     private Session mockSession1;
 
@@ -76,6 +74,5 @@ public class SessionTest {
         session.setCreatedAt(createdAt);
         session.setUpdatedAt(updatedAt);
         return session;
-
     }
 }

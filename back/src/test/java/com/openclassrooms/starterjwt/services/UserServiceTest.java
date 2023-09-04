@@ -16,10 +16,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class UserServiceTest {
-
     @InjectMocks
     UserService userService;
-
     @Mock
     UserRepository userRepository;
 
@@ -50,14 +48,13 @@ public class UserServiceTest {
 
     @Test
     public void findById() {
-        Long idUserExist = mockUser.getId();
-
-        when(userRepository.findById(idUserExist)).thenReturn(Optional.of(mockUser));
-
-        assertThat(userService.findById(idUserExist).getFirstName()).isEqualTo(mockUser.getFirstName());
-        assertThat(userService.findById(idUserExist).getLastName()).isEqualTo(mockUser.getLastName());
-
+        Long idUser = mockUser.getId();
         // Id user How Does Not Exist
-        assertThat(userService.findById(5L)).isEqualTo(null);
+        assertThat(userService.findById(idUser)).isEqualTo(null);
+
+        when(userRepository.findById(idUser)).thenReturn(Optional.of(mockUser));
+
+        assertThat(userService.findById(idUser).getFirstName()).isEqualTo(mockUser.getFirstName());
+        assertThat(userService.findById(idUser).getLastName()).isEqualTo(mockUser.getLastName());
     }
 }

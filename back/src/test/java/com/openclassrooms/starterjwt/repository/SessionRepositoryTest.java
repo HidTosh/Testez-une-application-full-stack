@@ -3,10 +3,8 @@ package com.openclassrooms.starterjwt.repository;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.models.User;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,104 +26,77 @@ public class SessionRepositoryTest {
     @Autowired
     private SessionRepository sessionRepository;
 
-    private User user;
-    private Teacher teacher;
     private Session session;
 
     @BeforeEach
     public void setup(){
-        user = new User(
-                1L,
-                "test@test.io",
-                "last",
-                "first",
-                "***",
-                false,
-                LocalDateTime.now(),
-                LocalDateTime.now()
+        LocalDateTime date = LocalDateTime.now();
+        User user = new User(
+            1L, "test@test.io", "last", "first", "***", false, date, date
         );
-        teacher = new Teacher(
-                2L,
-                "last_name",
-                "first_name",
-                LocalDateTime.now(),
-                LocalDateTime.now()
+        Teacher teacher = new Teacher(
+            2L, "last_name", "first_name", date, date
         );
         session = Session.builder()
             .name("session 1")
             .date(new Date())
             .description("my description")
             .teacher(teacher)
-            .users(Arrays.asList(user))
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
+            .users(Arrays.asList(user, user))
+            .createdAt(date)
+            .updatedAt(date)
             .build();
     }
 
-    // JUnit test for get all employees operation
-    @DisplayName("JUnit test for get all session operation")
     @Test
-    public void givenSessionsList_whenFindAll_thenSessionsList(){
-        // given - precondition or setup
+    public void givenSessionWhenFindAllThenSessionsList(){
+        //Given
         sessionRepository.save(session);
-        // when -  action or the behaviour that we are going test
+        //When find all
         List<Session> sessionList = sessionRepository.findAll();
-        // then - verify the output
+        //Then
         assertThat(sessionList).isNotNull();
-        Assert.assertTrue(sessionList.size()  >= 1 );
+        assertThat(sessionList.size()).isGreaterThanOrEqualTo(1);
     }
 
-    // JUnit test for save employee operation
-    //@DisplayName("JUnit test for save session operation")
     @Test
-    public void givenSessionObject_whenSave_thenReturnSavedSession(){
-
-        //given - precondition or setup
-        // when - action or the behaviour that we are going test
+    public void givenSessionWhenSaveThenReturnSavedSession(){
+        //When save
         Session savedSession = sessionRepository.save(session);
-
-        // then - verify the output
+        //Then - verify the output
         assertThat(savedSession).isNotNull();
-        assertThat(savedSession.getId()).isGreaterThan(0);
+        assertThat(savedSession.getId()).isEqualTo(session.getId());
     }
 
-    // JUnit test for get employee by id operation
-    @DisplayName("JUnit test for get session by id")
     @Test
-    public void givenTeacherObject_whenFindById_thenReturnTeacherObject(){
+    public void givenSessionWhenFindByIdThenReturnSession(){
         sessionRepository.save(session);
-        // when -  action or the behaviour that we are going test
-        Session sessionDB = sessionRepository.findById(session.getId()).get();
-        // then - verify the output
-        assertThat(sessionDB).isNotNull();
+        //When
+        Session sessionDb = sessionRepository.findById(session.getId()).get();
+        //Then
+        assertThat(sessionDb).isNotNull();
+        assertThat(sessionDb.getId()).isEqualTo(session.getId());
     }
 
-    // JUnit test for delete employee operation
-    @DisplayName("JUnit test for delete session operation")
     @Test
-    public void givenEmployeeObject_whenDelete_thenRemoveEmployee(){
+    public void givenSessionWhenDeleteThenSessionDeleted(){
         sessionRepository.save(session);
-        // when -  action or the behaviour that we are going test
+        //When
         sessionRepository.deleteById(session.getId());
-        //sessionRepository.findById(session.getId());
         Optional<Session> sessionOptional = sessionRepository.findById(session.getId());
-        // then - verify the output
+        //Then
         assertThat(sessionOptional).isEmpty();
     }
 
-    // JUnit test for update employee operation
-    @DisplayName("JUnit test for update session operation")
     @Test
-    public void givenSessionObject_whenUpdateSession_thenReturnUpdatedSession(){
+    public void givenSessionWhenUpdateThenReturnUpdatedSession(){
         sessionRepository.save(session);
-
-        // when -  action or the behaviour that we are going test
+        //When
         Session savedSession = sessionRepository.findById(session.getId()).get();
         savedSession.setName("ram");
         savedSession.setDescription("my desc");
         Session updatedSession =  sessionRepository.save(savedSession);
-
-        // then - verify the output
+        //Then
         assertThat(updatedSession.getName()).isEqualTo("ram");
         assertThat(updatedSession.getDescription()).isEqualTo("my desc");
     }

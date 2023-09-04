@@ -37,14 +37,14 @@ public class UserDetailsServiceImplTest {
         }
 
         user = new User(
-                1L,
-                "test@test.io",
-                "last",
-                "first",
-                "***",
-                false,
-                LocalDateTime.now(),
-                LocalDateTime.now()
+            1L,
+            "test@test.io",
+            "last",
+            "first",
+            "***",
+            false,
+            LocalDateTime.now(),
+            LocalDateTime.now()
         );
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 

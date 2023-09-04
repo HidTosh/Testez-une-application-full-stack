@@ -11,7 +11,6 @@ public class SignupRequestTest {
 
     private SignupRequest mockSignupRequest;
     private SignupRequest mockSignupRequest1;
-
     private SignupRequest mockSignupRequest2;
 
     @BeforeEach
@@ -23,8 +22,17 @@ public class SignupRequestTest {
 
     @Test
     public void testEquals() {
-        // equality user instance with him self
+        assertThat(mockSignupRequest.equals(mockSignupRequest1)).isTrue();
+
         assertThat(mockSignupRequest.equals(mockSignupRequest)).isTrue();
+
+        assertThat(mockSignupRequest2.equals(mockSignupRequest2)).isTrue();
+
+        assertThat(mockSignupRequest.equals(mockSignupRequest2)).isFalse();
+
+        assertThat(mockSignupRequest2.equals(null)).isFalse();
+
+        assertThat(mockSignupRequest2.equals(mockSignupRequest)).isFalse();
 
         mockSignupRequest1.setEmail("test2@test.io");
         assertThat(mockSignupRequest.equals(mockSignupRequest1)).isFalse();
@@ -45,12 +53,6 @@ public class SignupRequestTest {
         assertThat(mockSignupRequest.equals(mockSignupRequest1)).isFalse();
         mockSignupRequest1.setPassword("**");
 
-        assertThat(mockSignupRequest.equals(mockSignupRequest2)).isFalse();
-
-        assertThat(mockSignupRequest2.equals(mockSignupRequest)).isFalse();
-
-        assertThat(mockSignupRequest2.equals(null)).isFalse();
-
         mockSignupRequest1.setEmail(null);
         mockSignupRequest.setEmail(null);
         assertThat(mockSignupRequest.equals(mockSignupRequest1)).isTrue();
@@ -66,17 +68,17 @@ public class SignupRequestTest {
         mockSignupRequest1.setPassword(null);
         mockSignupRequest.setPassword(null);
         assertThat(mockSignupRequest.equals(mockSignupRequest1)).isTrue();
-
-        Object object = new Object();
-
-        assertThat(object.equals(mockSignupRequest2)).isFalse();
-
     }
 
     @Test
     public void testToString() {
+        Object object = new Object();
+
         assertThat(mockSignupRequest).isEqualTo(mockSignupRequest);
         assertThat(mockSignupRequest.toString()).isEqualTo(mockSignupRequest.toString());
+
+        assertThat(object.equals(mockSignupRequest)).isFalse();
+        assertThat(object.toString().equals(mockSignupRequest.toString())).isFalse();
     }
 
     @Test
