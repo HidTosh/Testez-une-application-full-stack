@@ -30,17 +30,17 @@ public class SessionTest {
     @Test
     public void testEquals() {
         Session mockEmptySession = new Session();
-        // equality of two user instance
+        // equality of two session instance
         assertThat(mockSession.equals(mockSession1)).isTrue();
-        // equality user instance with him self
+        // equality session instance with him self
         assertThat(mockSession.equals(mockSession)).isTrue();
-        // equality of two user instance
+        // equality of two session instance
         assertThat(mockEmptySession.equals(mockEmptySession)).isTrue();
-        // equality of empty user instance with user instance
+        // equality of empty session instance with user instance
         assertThat(mockSession.equals(mockEmptySession)).isFalse();
-        // equality of empty user instance null
+        // equality of empty session instance null
         assertThat(mockEmptySession.equals(null)).isFalse();
-        // equality of user instance null
+        // equality of session instance null
         assertThat(mockEmptySession.equals(mockSession)).isFalse();
     }
 

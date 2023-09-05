@@ -24,8 +24,6 @@ public class AuthEntryPointJwtTest {
         LogCaptor logCaptor = LogCaptor.forClass(AuthEntryPointJwt.class);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setParameter("firstName", "Spring");
-        request.setParameter("lastName", "Test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         AuthenticationException e = mock(AuthenticationException.class);
 

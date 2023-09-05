@@ -100,7 +100,7 @@ public class UserControllerIntegrationTest {
                 )
                 .andExpect(status().isOk()
             );
-        // return not authorized when same user as connected
+        //WHEN same user as connected return not authorized
         mockUser.setEmail("user@test.com");
         mockMvc.perform(MockMvcRequestBuilders
                     .delete("/api/user/{id}", id)

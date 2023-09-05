@@ -27,7 +27,6 @@ public class UserTest {
     public void testEquals() {
         User mockEmptyUser = new User();
         User mockEmptyUser1 = new User();
-        Object object = new Object();
         // equality user instance with him self
         assertThat(mockUser.equals(mockUser)).isTrue();
         // equality of two user instance

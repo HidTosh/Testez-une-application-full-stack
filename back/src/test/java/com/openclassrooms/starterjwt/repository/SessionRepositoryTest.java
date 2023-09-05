@@ -22,7 +22,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class SessionRepositoryTest {
-
     @Autowired
     private SessionRepository sessionRepository;
 

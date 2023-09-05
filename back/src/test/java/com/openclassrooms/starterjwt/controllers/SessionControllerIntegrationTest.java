@@ -70,7 +70,8 @@ public class SessionControllerIntegrationTest {
         Long id = mockSession.getId();
         //WHEN session does not exist
         mockMvc.perform(MockMvcRequestBuilders
-                    .get("/api/session/{id}", id))
+                    .get("/api/session/{id}", id)
+                )
                 .andExpect(status().isNotFound()
             );
         //WHEN session exists
@@ -85,7 +86,9 @@ public class SessionControllerIntegrationTest {
                 .andExpect(jsonPath("$.name").value(mockSession.getName())
             );
         //WHEN session id is not integer
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/session/{id}", "id"))
+        mockMvc.perform(MockMvcRequestBuilders
+                    .get("/api/session/{id}", "id")
+                )
                 .andExpect(status().isBadRequest()
             );
     }
@@ -156,8 +159,8 @@ public class SessionControllerIntegrationTest {
                     .accept(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(mockSessionDto.getName()))
-                .andExpect(jsonPath("$.description").value(mockSessionDto.getDescription())
+                .andExpect(jsonPath("$.name").value(mockSession.getName()))
+                .andExpect(jsonPath("$.description").value(mockSession.getDescription())
             );
         //WHEN session id is not integer
         mockMvc.perform(MockMvcRequestBuilders
@@ -193,7 +196,9 @@ public class SessionControllerIntegrationTest {
             .andExpect(status().isOk()
         );
         //WHEN session id not integer
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/session/{id}", "id"))
+        mockMvc.perform(MockMvcRequestBuilders
+                    .delete("/api/session/{id}", "id")
+                )
                 .andExpect(status().isBadRequest()
             );
     }
@@ -201,13 +206,13 @@ public class SessionControllerIntegrationTest {
     @Test
     public void shouldParticipateSession() throws Exception {
         //GIVEN
+        Long userId = mockUser.getId();
+        Long sessionId = mockSession.getId();
         User mockUser2 = new User(
             2L, "test@test.io", "last", "first", "***", false, date, date
         );
         ArrayList<User> userArrayList = new ArrayList<User>(1);
         userArrayList.add(mockUser2);
-        Long userId = mockUser.getId();
-        Long sessionId = mockSession.getId();
         mockSession.setUsers(userArrayList);
         //WHEN
         Mockito.when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(mockSession));
@@ -221,7 +226,7 @@ public class SessionControllerIntegrationTest {
                 .andExpect(status().isOk()
             );
         assertThat(mockSession.getUsers().size()).isEqualTo(2);
-        //Throw an error when user id not integer
+        //WHEN user id not integer throw an error
         mockMvc.perform(MockMvcRequestBuilders
                     .post("/api/session/{sessionId}/participate/{userId}", sessionId, "id")
                     .contentType(MediaType.APPLICATION_JSON)

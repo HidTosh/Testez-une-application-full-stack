@@ -34,7 +34,6 @@ import java.util.Optional;
 @AutoConfigureMockMvc
 @WithMockUser
 public class AuthControllerIntegrationTest {
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -81,7 +80,7 @@ public class AuthControllerIntegrationTest {
     public void shouldRegisterUser() throws Exception {
         //GIVEN
         String requestBody = objectMapper.writeValueAsString(signupRequest());
-        // when user do not exist
+        //WHEN user does not exist
         mockMvc.perform(MockMvcRequestBuilders
                     .post("/api/auth/register")
                     .content(requestBody)

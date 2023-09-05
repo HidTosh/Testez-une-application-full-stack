@@ -8,12 +8,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import nl.altindag.log.LogCaptor;
 import nl.altindag.log.model.LogEvent;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -28,9 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.aspectj.bridge.MessageUtil.fail;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -44,10 +40,7 @@ public class AuthTokenFilterTest {
     @InjectMocks
     UserDetailsServiceImpl userDetailsServiceImpl;
     private Authentication authentication;
-
     private UserDetailsImpl userDetails;
-
-    private User mockUser;
 
     @BeforeEach
     public void setup() {
@@ -61,10 +54,7 @@ public class AuthTokenFilterTest {
 
         userDetails = userDetails();
         TestingAuthenticationProvider provider = new TestingAuthenticationProvider();
-        TestingAuthenticationToken token = new TestingAuthenticationToken(
-                userDetails,
-                "ROLE_USER"
-        );
+        TestingAuthenticationToken token = new TestingAuthenticationToken(userDetails, "ROLE_USER");
         authentication = provider.authenticate(token);
     }
 
@@ -80,8 +70,6 @@ public class AuthTokenFilterTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer " + myNewToken);
-        request.setParameter("firstName", "Spring");
-        request.setParameter("lastName", "Test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain();
 
@@ -92,7 +80,6 @@ public class AuthTokenFilterTest {
         LogEvent logEvent = logEvents.get(0);
         assertThat(logEvent.getMessage()).isEqualTo("Cannot set user authentication: {}");
         assertThat(logEvent.getLevel()).isEqualTo("ERROR");
-
 
         LogCaptor logCaptor2 = LogCaptor.forClass(AuthTokenFilter.class);
         MockFilterChain filterChain2 = new MockFilterChain();
@@ -109,7 +96,7 @@ public class AuthTokenFilterTest {
             "test@test.io",
             "first name",
             "last name",
-            true,
+            false,
             "test!1234"
         );
     }

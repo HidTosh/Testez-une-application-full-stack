@@ -30,23 +30,23 @@ public class TeacherTest { ;
     }
     @Test
     public void testEquals() {
-        Teacher mockEmptyTeacher = new Teacher();
-        // equality of two user instance
-        assertThat(mockTeacher.equals(mockTeacher1)).isFalse();
-        // equality user instance with him self
-        assertThat(mockTeacher.equals(mockTeacher)).isTrue();
-        // equality of two user instance
-        assertThat(mockEmptyTeacher.equals(mockEmptyTeacher)).isTrue();
-        // equality of empty user instance with user instance
-        assertThat(mockTeacher.equals(mockEmptyTeacher)).isFalse();
-        // equality of empty user instance null
-        assertThat(mockEmptyTeacher.equals(null)).isFalse();
-        // equality of user instance null
-        assertThat(mockEmptyTeacher.equals(mockTeacher)).isFalse();
-
         Object object = new Object();
-        assertThat(mockEmptyTeacher.equals(object)).isFalse();
 
+        Teacher mockEmptyTeacher = new Teacher();
+        // equality of two teacher instance
+        assertThat(mockTeacher.equals(mockTeacher1)).isFalse();
+        // equality teacher instance with him self
+        assertThat(mockTeacher.equals(mockTeacher)).isTrue();
+        // equality of two teacher instance
+        assertThat(mockEmptyTeacher.equals(mockEmptyTeacher)).isTrue();
+        // equality of empty teacher instance with user instance
+        assertThat(mockTeacher.equals(mockEmptyTeacher)).isFalse();
+        // equality of empty teacher instance null
+        assertThat(mockEmptyTeacher.equals(null)).isFalse();
+        // equality of teacher instance null
+        assertThat(mockEmptyTeacher.equals(mockTeacher)).isFalse();
+        // equality of two empty object
+        assertThat(mockEmptyTeacher.equals(object)).isFalse();
     }
 
     @Test

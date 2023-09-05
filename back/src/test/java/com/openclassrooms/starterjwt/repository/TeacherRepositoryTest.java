@@ -17,7 +17,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TeacherRepositoryTest {
-
     @Autowired
     private TeacherRepository teacherRepository;
 

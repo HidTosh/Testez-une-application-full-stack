@@ -15,7 +15,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 public class UserMapperTest {
-
     @InjectMocks
     UserMapperImpl userMapperImpl;
 
@@ -129,5 +128,4 @@ public class UserMapperTest {
         user.setUpdatedAt(updatedAt);
         return user;
     }
-
 }

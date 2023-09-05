@@ -8,7 +8,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 public class SignupRequestTest {
-
     private SignupRequest mockSignupRequest;
     private SignupRequest mockSignupRequest1;
     private SignupRequest mockSignupRequest2;
