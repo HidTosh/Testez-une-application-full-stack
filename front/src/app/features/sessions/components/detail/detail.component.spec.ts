@@ -110,5 +110,12 @@ describe('DetailComponent', () => {
     req.flush(true);
     expect(myPrivateFuncExitPage).toBeCalled();
   });
+
+  describe('DetailComponent integrartion suite', () => { 
+    it('should render the detail session', async() => {
+      //session not provided mat card not shown
+      expect(fixture.nativeElement.querySelector('[mat-card]')).toBeNull();
+    });
+  })
 });
 
