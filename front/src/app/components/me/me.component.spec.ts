@@ -65,6 +65,7 @@ describe('MeComponent', () => {
 
   it('should get userById when call ngOnInit', () => {
     component.ngOnInit();
+
     const req = httpTestingController.expectOne('api/user/1');
     expect(req.request.method).toEqual('GET');
     req.flush(true);
@@ -73,6 +74,7 @@ describe('MeComponent', () => {
 
   it('should call window.history.back', () => {
     jest.spyOn(window.history, 'back');
+
     component.back();
     expect(window.history.back).toBeCalled();
   });
@@ -86,13 +88,13 @@ describe('MeComponent', () => {
   describe('MeComponent integrartion suite', () => { 
     it('should render the me informations page', async() => {
       httpTestingController
+      
       expect(getByText(document.body, ('User information'))).toBeTruthy();
-      //const mockDelete = jest.spyOn(component as any, 'delete');
+
       const deleteBtn = fixture.nativeElement.querySelector('button');
 
       expect(deleteBtn).toBeTruthy();
       await userEvent.click(deleteBtn);    
-      //expect(mockDelete).toHaveBeenCalledTimes(1);
     });
   });
 });

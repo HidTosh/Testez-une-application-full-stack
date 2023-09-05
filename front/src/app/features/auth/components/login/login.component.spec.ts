@@ -78,6 +78,7 @@ describe('LoginComponent', () => {
     .error(new ErrorEvent(''));
   });
 
+  
   describe('LoginComponent integrartion suite', () => {
     let emailInput: HTMLInputElement;
     let passwordInput: HTMLInputElement;
