@@ -61,20 +61,40 @@ describe('RegisterComponent', () => {
   it('should call register success', () => {
     const navigateSpy = jest.spyOn(router,'navigate');
 
+    component.form.controls['email'].setValue("test@test.io");
+    component.form.controls['firstName'].setValue("firstname");
+    component.form.controls['lastName'].setValue("lastname");
+    component.form.controls['password'].setValue("*****");
     component.submit()
+
     const req = httpTestingController.expectOne('api/auth/register');
+    
     expect(req.request.method).toEqual('POST');
     ngZone.run(() => {
       req.flush(true);
+      expect(req.request.body.email).toEqual("test@test.io");
+      expect(req.request.body.firstName).toEqual("firstname");
+      expect(req.request.body.lastName).toEqual("lastname");
+      expect(req.request.body.password).toEqual("*****");
       httpTestingController.verify();
       expect(navigateSpy).toHaveBeenCalledWith(['/login']);
     })
   });
 
   it('should call register error', () => {
+    component.form.controls['email'].setValue("");
+    component.form.controls['firstName'].setValue("");
+    component.form.controls['lastName'].setValue("lastname");
+    component.form.controls['password'].setValue("*****");
     component.submit()
-    httpTestingController.expectOne('api/auth/register')
-    .error(new ErrorEvent(''));
+
+    const req = httpTestingController.expectOne('api/auth/register');
+    
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body.email).toEqual("");
+    expect(req.request.body.firstName).toEqual("");
+    req.error(new ErrorEvent(''));
+    httpTestingController.verify();
   });
 
   describe('RegisterComponent integrartion suite', () => { 
@@ -92,9 +112,8 @@ describe('RegisterComponent', () => {
       buttonSubmit = fixture.nativeElement.querySelector('[type="submit"]');
     })
 
-    it('should button submit be disable when only password and email provided', async() => {
+    it('should button submit be disable when only email provided', async() => {
       await userEvent.type(emailInput, 'thoas@yahoo.fr');
-      await userEvent.type(passwordInput, '*******');
       fixture.detectChanges();
       expect(buttonSubmit.disabled).toBeTruthy(); 
     })

@@ -55,6 +55,7 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -62,20 +63,34 @@ describe('LoginComponent', () => {
   it('should login and navigate to session when the correct credentials are sent', () => {
     const navigateSpy = jest.spyOn(router,'navigate');
 
+    component.form.controls['email'].setValue("test@test.io");
+    component.form.controls['password'].setValue("test123");
     component.submit();
+
     const req = httpTestingController.expectOne('api/auth/login');
+
     expect(req.request.method).toEqual('POST');
     ngZone.run(() => {
       req.flush(true);
+      expect(req.request.body.email).toEqual("test@test.io");
+      expect(req.request.body.password).toEqual("test123");
       httpTestingController.verify();
       expect(navigateSpy).toHaveBeenCalledWith(['/sessions']);
     })
   });
 
   it('should fail when try to login with bad credentials', () => {
+    component.form.controls['email'].setValue("");
+    component.form.controls['password'].setValue("");
     component.submit();
-    httpTestingController.expectOne('api/auth/login')
-    .error(new ErrorEvent(''));
+
+    const req = httpTestingController.expectOne('api/auth/login');
+
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body.email).toEqual("");
+    expect(req.request.body.password).toEqual("");
+    req.error(new ErrorEvent(''));
+    httpTestingController.verify();
   });
 
   
